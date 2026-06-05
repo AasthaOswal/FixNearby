@@ -28,13 +28,6 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   // ---------------- VALIDATION ----------------
-
-  const validateFields = (name, value) => {
-    const emailRegex =
-      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-    switch (name) {
-  
     const validateFields=(name,value)=>{
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     switch(name){
