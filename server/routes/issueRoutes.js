@@ -11,6 +11,14 @@ import {
 } from '../controllers/issueController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
+import {
+  nearbyIssuesLimiter,
+  createIssueLimiter,
+  upvoteLimiter,
+  issueDetailsLimiter,
+  issueStatusLimiter,
+} from "../middleware/apiRateLimiter.js";
+
 const router = express.Router();
 
 // Setup multer storage
@@ -57,17 +65,17 @@ const upload = multer({
 });
 
 // GET /nearby
-router.get('/nearby', getNearbyIssues);
+router.get('/nearby', nearbyIssuesLimiter, getNearbyIssues);
 
 // POST / (create issue) - supports optional image
-router.post('/', upload.single('image'), createIssue);
+router.post('/',  createIssueLimiter, upload.single('image'), createIssue);
 
 // POST /:id/upvote — requires authentication so each user can vote at most once
-router.post('/:id/upvote', protect, upvoteIssue);
+router.post('/:id/upvote', upvoteLimiter, protect, upvoteIssue);
 
 // GET /:id
-router.get('/:id', getIssueById);
+router.get('/:id', issueDetailsLimiter, getIssueById);
 
-router.patch('/:id/status', updateIssueStatus);
+router.patch('/:id/status', issueStatusLimiter, updateIssueStatus);
 
 export default router;

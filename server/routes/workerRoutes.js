@@ -3,12 +3,19 @@ import { registerWorker, loginWorker, getWorkers, getWorkerById, getWorkerProfil
 import { protectWorker } from '../middleware/authMiddleware.js';
 import upload from '../middleware/uploadMiddleware.js';
 
+import {
+  workerProfileLimiter,
+  workerListLimiter,
+  workerDetailsLimiter,
+} from "../middleware/apiRateLimiter.js";
+
+
 const router = express.Router();
 
 router.post('/register', upload.single('profilePicture'), registerWorker);
 router.post('/login', loginWorker);
-router.get('/profile', protectWorker, getWorkerProfile);
-router.get('/', getWorkers);
-router.get('/:id', getWorkerById);
+router.get('/profile', workerProfileLimiter, protectWorker, getWorkerProfile);
+router.get('/', workerListLimiter, getWorkers);
+router.get('/:id', workerDetailsLimiter, getWorkerById);
 
 export default router;

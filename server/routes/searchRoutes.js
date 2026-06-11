@@ -5,6 +5,12 @@ import {
   getPopularSearches,
 } from '../controllers/searchController.js';
 
+import {
+  searchLimiter,
+  searchSuggestionsLimiter,
+  popularSearchesLimiter,
+} from "../middleware/apiRateLimiter.js";
+
 const router = express.Router();
 
 /**
@@ -12,20 +18,20 @@ const router = express.Router();
  * @desc    Search workers with advanced filters
  * @access  Public
  */
-router.get('/', searchWorkers);
+router.get('/', searchLimiter, searchWorkers);
 
 /**
  * @route   GET /api/search/suggestions
  * @desc    Get autocomplete suggestions
  * @access  Public
  */
-router.get('/suggestions', getSearchSuggestions);
+router.get('/suggestions', searchSuggestionsLimiter, getSearchSuggestions);
 
 /**
  * @route   GET /api/search/popular
  * @desc    Get popular searches
  * @access  Public
  */
-router.get('/popular', getPopularSearches);
+router.get('/popular', popularSearchesLimiter, getPopularSearches);
 
 export default router;
